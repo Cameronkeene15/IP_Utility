@@ -1,25 +1,38 @@
 import tkinter
-import os
-
-def wifi_ip_address():
-    pass
-
-def ethernet_ip_address():
-    response = os.system('netsh interface ipv4 show config')
-    print(response)
-
-def set_wifi_ip_address():
-    pass
-
-def set_ethernet_ip_address():
-    pass
+import subprocess
 
 
+class Network:
 
+    def __init__(self):
+        self.config = self.get_config()
 
+    def wifi_ip_address(self):
+        pass
 
+    def ethernet_ip_address(self):
+        pass
 
+    def set_wifi_ip_address(self):
+        pass
 
+    def set_ethernet_ip_address(self):
+        pass
+
+    def get_interfaces(self):
+        pass
+
+    def get_config(self):
+        # runs the OS command which returns the computers network interfaces and their respective information
+        process = subprocess.run('netsh interface ipv4 show config', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # runcode being 0 means there were no process errors
+        if process.runcode == 0:
+            # returns the stdout response from the command as a string (stdout must be decoded from bytes)
+            return process.stdout.decode('utf-8')
+        else:
+            # TODO: figure out how to handle stderr if runcode is not 0
+            return None
 
 
 class Application(tkinter.Frame):
@@ -48,13 +61,10 @@ class Application(tkinter.Frame):
         self.subnet_value = tkinter.Entry(self)
         self.subnet_value.grid(row=2, column=1)
 
-
         self.submit = tkinter.Button(self)
         self.submit["text"] = 'Change IP'
         self.submit["command"] = self.change_ip
         self.submit.grid(row=3, column=2)
-
-
 
     def change_ip(self):
         print('ip_address: ' + self.ip_address_value.get())
@@ -62,12 +72,14 @@ class Application(tkinter.Frame):
 
 
 if __name__ == '__main__':
-    ethernet_ip_address()
-    set_wifi_ip_address()
 
+    # calls the network class which finds out all necessary information about interfaces and IP's
+    network_info = Network()
+
+    # starts the GUI
     root = tkinter.Tk()
     app = Application(master=root)
     root.geometry('400x300')
     root.maxsize(width=300, height=300)
-    root.minsize(width=300, height=200)
+    root.minsize(width=300, height=300)
     app.mainloop()

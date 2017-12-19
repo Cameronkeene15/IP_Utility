@@ -35,17 +35,41 @@ class Network:
             return None
 
 
+def hello():
+    print("hello")
+
+
+
 class Application(tkinter.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.grid()
-        self.create_widgets()
 
-    def create_widgets(self):
-        self.interface_select = tkinter.Radiobutton()
+        # self.menubar = tkinter.Menu(root)
+
+        # self.filemenu = tkinter.Menu(self.menubar, tearoff=0)
+        # self.filemenu.add_command(label="Open", command=hello)
+        # self.filemenu.add_command(label="Save", command=hello)
+        # self.filemenu.add_separator()
+        # self.filemenu.add_command(label="Exit", command=root.quit)
+        # self.menubar.add_cascade(label="File", menu=self.filemenu)
+        #
+        # self.editmenu = tkinter.Menu(self.menubar, tearoff=0)
+        # self.editmenu.add_command(label="Cut", command=hello)
+        # self.editmenu.add_command(label="Copy", command=hello)
+        # self.editmenu.add_command(label="Paste", command=hello)
+        # self.menubar.add_cascade(label="Edit", menu=self.editmenu)
+        #
+        # self.helpmenu = tkinter.Menu(self.menubar, tearoff=0)
+        # self.helpmenu.add_command(label="About", command=hello)
+        # self.menubar.add_cascade(label="Help", menu=self.helpmenu)
+        #
+        # root.config(menu=self.menubar)
+
+
+        self.interface_select = tkinter.Radiobutton(self)
         self.interface_select['text'] = 'WIFI'
         self.interface_select.grid(row=0, column=0)
-
 
         self.ip_address_label = tkinter.Label(self)
         self.ip_address_label['text'] = 'IP Addr:'
@@ -64,7 +88,7 @@ class Application(tkinter.Frame):
         self.submit = tkinter.Button(self)
         self.submit["text"] = 'Change IP'
         self.submit["command"] = self.change_ip
-        self.submit.grid(row=3, column=2)
+        self.submit.grid(row=3, column=1)
 
     def change_ip(self):
         print('ip_address: ' + self.ip_address_value.get())
@@ -74,12 +98,12 @@ class Application(tkinter.Frame):
 if __name__ == '__main__':
 
     # calls the network class which finds out all necessary information about interfaces and IP's
-    network_info = Network()
+#    network_info = Network()
 
     # starts the GUI
     root = tkinter.Tk()
     app = Application(master=root)
-    root.geometry('400x300')
-    root.maxsize(width=300, height=300)
-    root.minsize(width=300, height=300)
+    root.geometry('300x200')
+    root.maxsize(width=300, height=200)
+    root.minsize(width=300, height=200)
     app.mainloop()

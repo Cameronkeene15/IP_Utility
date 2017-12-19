@@ -7,19 +7,24 @@ class Network:
     def __init__(self):
         self.config = self.get_config()
 
-    def wifi_ip_address(self):
+    def set_interface(self, interface, ip, subnet, gateway=None):
+        if gateway:
+            process = subprocess.run('netsh interface ipv4 set address "%s" static %s %s' % (interface, ip, subnet))
+        else:
+            process = subprocess.run('netsh interface ipv4 set address "%s" static %s %s %s' %
+                                     (interface, ip, subnet, gateway))
+        return process.returncode
+
+    def get_interfaces(self, config):
+        # TODO: get interface names using regex
         pass
 
-    def ethernet_ip_address(self):
+    def get_wifi_info(self, config):
+        # TODO: use regex to get WIFI ip address and subnet
         pass
 
-    def set_wifi_ip_address(self):
-        pass
-
-    def set_ethernet_ip_address(self):
-        pass
-
-    def get_interfaces(self):
+    def get_ethernet_info(self, config):
+        # TODO: use regex to get LAN ip address and subnet
         pass
 
     def get_config(self):
@@ -39,11 +44,12 @@ def hello():
     print("hello")
 
 
-
 class Application(tkinter.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.grid()
+
+        # example code for a menu bar. Might not even use this.
 
         # self.menubar = tkinter.Menu(root)
 
@@ -66,29 +72,41 @@ class Application(tkinter.Frame):
         #
         # root.config(menu=self.menubar)
 
+        self.interface_select = tkinter.BooleanVar()
+        self.interface_select.set(False)
 
-        self.interface_select = tkinter.Radiobutton(self)
-        self.interface_select['text'] = 'WIFI'
-        self.interface_select.grid(row=0, column=0)
+        self.lan_interface = tkinter.Radiobutton(self, text='LAN', value=False, variable=self.interface_select)
+        self.lan_interface.grid(row=0, column=0)
 
-        self.ip_address_label = tkinter.Label(self)
-        self.ip_address_label['text'] = 'IP Addr:'
-        self.ip_address_label.grid(row=1, column=0)
+        self.wifi_interface = tkinter.Radiobutton(self, text='WIFI', value=True, variable=self.interface_select)
+        self.wifi_interface.grid(row=0, column=1)
+
+        self.ip_address_label = tkinter.Label(self, text='IP Addr:')
+        self.ip_address_label.grid(row=1, column=0, sticky='e')
 
         self.ip_address_value = tkinter.Entry(self)
-        self.ip_address_value.grid(row=1, column=1)
+        self.ip_address_value.grid(row=1, column=1, columnspan=2, sticky='we')
 
-        self.subnet_label = tkinter.Label(self)
-        self.subnet_label['text'] = 'Subnet:'
-        self.subnet_label.grid(row=2, column=0)
+        self.subnet_label = tkinter.Label(self, text='Subnet:')
+        self.subnet_label.grid(row=2, column=0, sticky='e')
 
         self.subnet_value = tkinter.Entry(self)
-        self.subnet_value.grid(row=2, column=1)
+        self.subnet_value.grid(row=2, column=1, columnspan=2, sticky='we')
 
-        self.submit = tkinter.Button(self)
-        self.submit["text"] = 'Change IP'
-        self.submit["command"] = self.change_ip
-        self.submit.grid(row=3, column=1)
+        self.gateway_label = tkinter.Label(self, text='Gateway:')
+        self.gateway_label.grid(row=3, column=0, sticky='e')
+
+        self.gateway_value = tkinter.Entry(self)
+        self.gateway_value.grid(row=3, column=1, columnspan=2, sticky='we')
+
+        self.change = tkinter.Button(self, text='Change IP', command=self.change_ip)
+        self.change.grid(row=4, column=0, sticky='we')
+
+        self.load = tkinter.Button(self, text='Load IP', command=self.change_ip)
+        self.load.grid(row=4, column=1, sticky='we')
+
+        self.save = tkinter.Button(self, text='Save IP', command=self.change_ip)
+        self.save.grid(row=4, column=2, sticky='we')
 
     def change_ip(self):
         print('ip_address: ' + self.ip_address_value.get())
@@ -103,7 +121,7 @@ if __name__ == '__main__':
     # starts the GUI
     root = tkinter.Tk()
     app = Application(master=root)
-    root.geometry('300x200')
-    root.maxsize(width=300, height=200)
-    root.minsize(width=300, height=200)
+    root.geometry('260x110')
+    root.maxsize(width=260, height=110)
+    root.minsize(width=260, height=110)
     app.mainloop()

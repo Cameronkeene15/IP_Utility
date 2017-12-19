@@ -121,7 +121,7 @@ if __name__ == '__main__':
     # starts the GUI
     root = tkinter.Tk()
     app = Application(master=root)
-    root.geometry('260x110')
-    root.maxsize(width=260, height=110)
-    root.minsize(width=260, height=110)
+    root.geometry('250x150')
+    root.maxsize(width=250, height=150)
+    root.minsize(width=250, height=150)
     app.mainloop()
